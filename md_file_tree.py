@@ -149,6 +149,7 @@ def replace_index(filename, new_index):
     pre = True
     post = False
     try:
+        print(filename)
         with open(filename, 'r') as md_in:
             for line in md_in:
                 if '<!-- filetree' in line:
