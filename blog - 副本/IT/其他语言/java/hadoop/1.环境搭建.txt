@@ -1,7 +1,0 @@
-hadoop命令提示的功能，比如
-hadoop
-hadoop fs  都会有提示的
-
-
-
-     
