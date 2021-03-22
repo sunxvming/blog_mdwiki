@@ -1,0 +1,70 @@
+BFD: /lib64/libc.so.6: version `GLIBC_2.14' not found   出现这个错误是因为glibc（gun的基础c库）的版本比较低导致的。故升级一下即可
+
+【说明】
+glibc是gnu发布的libc库，即c运行库。glibc是linux系统中最底层的api，几乎其它任何运行库都会依赖于glibc。glibc除了封装linux操作系统所提供的系统服务外，它本身也提供了许多其它一些必要功能服务的实现…
+
+总的来说，不说运行在linux上的一些应用，或者你之前部署过的产品，就是很多linux的基本命令，比如cp, rm, ll之类，都得依赖于它
+
+网上很多人有惨痛教训，甚至升级失败后系统退出后无法重新进入了。。。。。。
+
+
+
+对于CentOS这样的系统，为了追求稳定性（这个值得商榷）往往各种库版本都很低，比如6.5甚至7.0自带的还是glibc2.12, 而ubuntu 14.04带glibc2.19
+
+如果升级基本C运行库到一个太新的版本，可能会影响CentOS的运行。所以大家如果遇到CentOS基本库的问题，影响了自己程序的运行，应该可以考虑：
+
+1. 在低版本的系统编译自己的产品，如果自己的产品确实不需要新版才支持的新特性
+
+2. 用版本高的系统来编译，比如ubuntu，和centos的新版，但可能需要部署到较低版本，那么可以考虑用mock等技术制作更好的安装包，把依赖打入包内
+
+3.利用容器技术，如Docker，在低版本的操作系统内，轻量级的隔离出一个虚拟运行环境，适应你的程序。
+
+好在我遇到的问题是glibc2.15就满足要求升级后暂时没发现问题，所以大家可以参考我的方法：
+
+首先查看现有的情况，在CentOS6.5下
+
+
+
+【安装】
+到http://ftp.gnu.org/gnu/glibc/下载glibc-2.14.tar.xz
+tar glibc-2.14.tar.gz
+cd glibc-2.14
+mkdir build
+cd build
+../configure --prefix=/usr/local/glibc-2.14
+make -j4
+make install
+
+
+
+【查看系统glibc版本库】
+
+strings /lib64/libc.so.6 |grep GLIBC_
+
+
+ 
+【创建软链接】
+
+1、删除原来软链
+
+rm -rf /lib64/libc.so.6 //谨慎操作后不要乱动
+
+2、解决补救问题
+
+LD_PRELOAD=/opt/glibc-2.14/lib/libc-2.14.so ln -s /opt/glibc-2.14/lib/libc-2.14.so /lib64/libc.so.6
+
+因为操作删除软链接后系统无法操作任何命令，我们需要复制上命令操作后才可以。（要谨慎）
+
+（LD_PRELOAD允许你定义在程序运行前优先加载的动态链接库,因此在使用ln前就加载了lib库，而不是等到使用ln时加载，这样就能临时使用命令了， 不仅仅是ln，只要加了LD_PRELOAD=/lib64/libc-2.5.so，后面可以跟一切因为libc.so.6被删不能用的命令）
+3、创建新软链接
+
+ln -s /opt/glibc-2.14/lib/libc-2.14.so /lib64/libc.so.6
+
+
+
+OK。。。
+
+
+
+
+

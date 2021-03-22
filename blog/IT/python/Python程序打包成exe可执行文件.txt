@@ -1,0 +1,317 @@
+
+
+版权声明：本文为博主原创文章，未经博主允许不得转载。					https://blog.csdn.net/zengxiantao1994/article/details/76578421
+Python程序打包工具
+
+Python是一个脚本语言，被解释器解释执行。它的发布方式：
+
+
+.py文件：对于开源项目或者源码没那么重要的，直接提供源码，需要使用者自行安装Python并且安装依赖的各种库。（Python官方的各种安装包就是这样做的）。
+
+.pyc文件：有些公司或个人因为机密或者各种原因，不愿意源码被运行者看到，可以使用pyc文件发布，pyc文件是Python解释器可以识别的二进制码，故发布后也是跨平台的，需要使用者安装相应版本的Python和依赖库。
+
+可执行文件：对于非码农用户或者一些小白用户，你让他装个Python同时还要折腾一堆依赖库，那简直是个灾难。对于此类用户，最简单的方式就是提供一个可执行文件，只需要把用法告诉他即可。比较麻烦的是需要针对不同平台需要打包不同的可执行文件（Windows, Linux, Mac,...）。
+
+
+
+
+.py和.pyc都比较简单，Python本身就可以搞定。将Python脚本打包成可执行文件有多种方式。
+
+各种打包工具的对比如下
+
+
+ Solution
+
+ Windows
+
+ Linux
+
+ OS X
+
+ Python 3
+
+ One
+
+ file mode
+
+ Zipfile import
+
+ Eggs
+
+ pkg_resources support
+
+
+ bbFreeze
+
+ yes
+
+ yes
+
+ yes
+
+ no
+
+ no
+
+ yes
+
+ yes
+
+ yes
+
+
+ py2exe
+
+ yes
+
+ no
+
+ no
+
+ yes
+
+ yes
+
+ yes
+
+ no
+
+ no
+
+
+ pyInstaller
+
+ yes
+
+ yes
+
+ yes
+
+ no
+
+ yes
+
+ no
+
+ yes
+
+ no
+
+
+ cx_Freeze
+
+ yes
+
+ yes
+
+ yes
+
+ yes
+
+ no
+
+ yes
+
+ yes
+
+ no
+
+
+ py2app
+
+ no
+
+ no
+
+ yes
+
+ yes
+
+ no
+
+ yes
+
+ yes
+
+ yes
+
+
+        其中pyInstaller和cx_Freeze都是不错的，stackoverflow上也有人建议用cx_Freeze，说是更便捷些。pkg_resources新版的pyInstaller貌似是支持的。
+
+
+PyInstaller 安装pyinstaller
+
+对于那些网络比较稳定，能够流畅使用pip源地址的用户，直接下面的命令就可以搞定：
+
+pip install pyinstaller
+
+通常我们会下载源码包，然后进入包目录，执行下面的命令（需要安装setuptools）：
+
+python setup.py install
+
+安装完后，检查安装成功与否：
+
+pyinstaller --version
+
+安装成功后，就可以使用下面的命令了：
+pyinstaller : 打包可执行文件的主要命令，详细用法下面会介绍。
+pyi-archive_viewer : 查看可执行包里面的文件列表。
+pyi-bindepend : 查看可执行文件依赖的动态库（.so或.dll文件）
+pyi-... : 等等。
+
+
+使用PyInstaller
+
+        pyinstaller的语法：pyinstaller [options] script [script...] | specfile
+
+        最简单的用法，在和myscript.py同目录下执行命令：
+
+         pyinstaller mycript.py
+
+         然后会看到新增加了两个目录build和dist，dist下面的文件就是可以发布的可执行文件，对于上面的命令你会发现dist目录下面有一堆文件，各种都动态库文件和myscrip可执行文件。有时这样感觉比较麻烦，需要打包dist下面的所有东西才能发布，万一丢掉一个动态库就无法运行了，好在pyInstaller支持单文件模式，只需要执行：
+
+        pyinstaller -F mycript.py
+
+        你会发现dist下面只有一个可执行文件，这个单文件就可以发布了，可以运行在你正在使用的操作系统类似的系统的下面。当然，pyinstaller还有各种选项，有通用选项，如-d选项用于debug。
+
+        在执行pyInstaller命令的时候，会在和脚本相同目录下，生成一个.spec文件，该文件会告诉pyinstaller如何处理你的所有脚本，同时包含了命令选项。一般我们不用去理会这个文件，若需要打包数据文件，或者给打包的二进制增加一些Python的运行时选项时...一些高级打包选项时，需要手动编辑.spec文件。可以使用：
+
+        pyi-makespec optionsscript [script ...]
+
+        创建一个.spec文件，对于手动编辑的.spec文件，我们可以使用下面任意一条命令：
+
+        pyinstaller specfile
+
+        pyi-build specfile
+
+
+PyInstaller原理简介
+
+        PyInstaller其实就是把python解析器和你自己的脚本打包成一个可执行的文件，和编译成真正的机器码完全是两回事，所以千万不要指望成打包成一个可执行文件会提高运行效率，相反可能会降低运行效率，好处就是在运行者的机器上不用安装python和你的脚本依赖的库。在Linux操作系统下，它主要用的binutil工具包里面的ldd和objdump命令。
+
+        PyInstaller输入你指定的的脚本，首先分析脚本所依赖的其他脚本，然后去查找，复制，把所有相关的脚本收集起来，包括Python解析器，然后把这些文件放在一个目录下，或者打包进一个可执行文件里面。
+
+        可以直接发布输出的整个文件夹里面的文件，或者生成的可执行文件。你只需要告诉用户，你的应用App是自我包含的，不需要安装其他包，或某个版本的Python，就可以直接运行了。
+
+        需要注意的是，PyInstaller打包的执行文件，只能在和打包机器系统同样的环境下。也就是说，不具备可移植性，若需要在不同系统上运行，就必须针对该平台进行打包。
+
+
+实践问题
+
+        pyinstaller打包后的exe运行怎么去掉弹出的命令行提示窗口？
+
+        1.如果使用.spec文件的话, 在该文件中找到console=True修改为 console=False
+
+        2.如果是直接指定python文件进行pyinstaller打包的话，需要添加— noconsole
+
+        pyinstaller path\\mycode . py -- noconsole
+
+        如果想只打包成一个exe：
+
+        pyinstaller -F path\\mycode.py --noconsole
+
+       或：
+
+        pyinstaller -F -wpath\\mycode.py
+
+        更换最终exe生成路径
+
+        在cmd中，一开始就要 cd D:\PythonEXE\ 切换到输出文件夹，然后在用上面的代码，说明：各个参数的作用，
+
+        例子：pyinstaller -F -w -pD:\tmp\core-python\libs -i d:\tmp\main.ico main.py
+
+        -F 表示生成单个可执行文件；
+
+        -D  –onedir 创建一个目录，包含exe文件，但会依赖很多文件（默认选项）。
+
+        -w 表示去掉控制台窗口，这在GUI界面时非常有用。不过如果是命令行程序的话那就把这个选项删除吧！；
+
+        -c  –console, –nowindowed 使用控制台，无界面(默认)；
+
+        -p 表示你自己自定义需要加载的类路径，一般情况下用不到；
+
+        -i 表示可执行文件的图标。
+
+
+py2exe
+
+         （ py2exe 似乎只能支持 python3.3 和 pyhton3.4 ）
+
+         py2exe是一个将python脚本转换成windows上的可独立执行的可执行程序(*.exe)的工具，这样，你就可以不用装python而在windows系统上运行这个可执行程序。 
+
+        py2exe已经被用于创建wxPython, Tkinter, Pmw, PyGTK, pygame,win32com client和server,和其它的独立程序。py2exe是发布在开源许可证下的。 py2exe的用法 
+
+        如果你有一个名为myscript.py的python脚本，你想把它转换为运行在windows上的可执行程序，并运行在没有安装python的 windows系统上，那么首先你应写一个用于发布程序的设置脚本例如mysetup.py，在其中的setup函数前插入语句import py2exe 。 
+
+mysetup.py示例如下: 
+
+# mysetup.py 
+
+from distutils.core import setup 
+
+import py2exe 
+
+setup(console=["myscript.py"]) 
+
+然后按下面的方法运行mysetup.py: 
+
+python mysetup.py py2exe 
+
+        上面的命令执行后将产生一个名为dist的子目录，其中包含了myscript.exe,python24.dll,library.zip这些文件。
+
+        如果你的myscript.py脚本中用了已编译的C扩展模块，那么这些模块也会被拷贝在个子目录中，同样，所有的dll文件在运行时都是需要的，除了系统的dll文件。 dist子目录中的文件包含了你的程序所必须的东西，你应将这个子目录中的所有内容一起发布。
+
+        默认情况下，py2exe在目录dist下创建以下这些必须的文件： 
+
+        1、一个或多个exe文件。
+
+        2、python##.dll。
+
+        3、几个.pyd文件，它们是已编译的扩展名，它们是exe文件所需要的；加上其它的.dll文件，这些.dll是.pyd所需要的。 
+
+        4、一个library.zip文件，它包含了已编译的纯的python模块如.pyc或.pyo 上面的mysetup.py创建了一个控制台的myscript.exe程序，如果你要创建一个图形用户界的程序，那么你只需要将mysetup.py中的console=["myscript.py"]替换为windows=["myscript.py"]既可。 
+
+        py2exe一次能够创建多个exe文件，你需要将这些脚本文件的列表传递给console或windows的关键字参数。如果你有几个相关联的脚本，那么这是很有用的。 
+
+        运行下面个命令，将显示py2exe命令的所有命令行标记。 
+
+        python mysetup.py py2exe--help 
+
+
+指定额外的文件 
+
+       一些应用程序在运行时需要额外的文件，诸如配置文件、字体、位图。 如果在安装脚本中用data_files可选项指定了那些额外的文件，那么py2exe能将这些文件拷贝到dist子目录中。data_files应包含一个元组(target-dir, files)列表，其中的files是这些额外的文件的列表。 
+
+示例如下： 
+
+# mysetup.py
+
+from distutils.core import setup
+
+import glob
+
+import py2exe 
+
+ 
+
+setup(console=["myscript.py"], 
+
+data_files=[("bitmaps", ["bm/large.gif","bm/small.gif"]), ("fonts", glob.glob("fonts\\*.fnt"))], ) 
+
+说明：data_files选项将创建一个子目录dist\bitmaps，其中包含两个.gif文件；一个子目录dist\fonts，其中包含了所有的.fnt文件。
+
+  Windows NTservices 
+
+        你可以通过传递一个service关键字参数给setup函数来建造Windows NT services ,这个service参数的值必须是一个Python模块名(包含一service类)的列表。 
+
+示例如下： 
+
+# mysetup.py
+
+from distutils.core import setup
+
+import py2exe
+
+setup(service=["MyService"]) 
+
+所建造的可执行的service是可以通过在其后跟一定的命令行参数标记来自行安装和卸载的。

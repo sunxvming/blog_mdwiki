@@ -1,0 +1,8 @@
+应用层
+DHCP  PEX  HTTP  FTP  RTMP（流媒体协议）
+传输层
+tcp  udp
+网络层
+ip
+链路层
+arp

@@ -1,0 +1,34 @@
+
+
+
+
+
+GPL（GNU General Public License） 
+GNU自由软件的通用许可协议
+允许用户任意复制、传递、修改及再发布
+基于自由软件修改再次发布的软件，仍需遵守GPL
+LGPL（Lesser General Public License）
+LGPL相对于GPL较为宽松，允许不公开全部源代码
+为基于Linux平台开发商业软件提供了更多空间
+
+
+
+
+
+
+vim下的文本替换   ：%s/my/xiaoming/g
+shift+v 块级选中，然后： s/^/#/g  就可以批量注释了
+========================================
+
+
+
+公钥登录的方式，端口不是22的
+ 
+xsh是xshell的session文件，就是记录连接信息的东东，放到下面的文件中就有服务器的连接信息量
+”%APPDATA%\NetSarang\Xshell\Sessions”
+即:C:\Users\用户名\AppData\Roaming\NetSarang\Xshell\Sessions
+
+
+
+
+

@@ -1,0 +1,45 @@
+ 【php数组结构与内存】
+
+$startMemory =  memory_get_usage ();
+
+$array = range(1, 100000);
+echo memory_get_usage() - $startMemory, ' bytes';
+How much would you expect it to be? Simple, one integer is 8 bytes (on a 64 bit unix machine and using the long type) and you got 100000 integers, so you obviously will need 800000 bytes. That’s something like 0.76 MBs.
+ 
+ This gives me 14649024 bytes. Yes, you heard right, that’s 13.97 MB -  18 times  more than we estimated.
+因为要存其他额外的信息，所以多了很多其他的空间，就是c要实现数组结构要维护其他很多的额外信息
+
+
+
+
+获取取得当前文件的路径
+1、dirname(__FILE__);    __FILE__   从服务器根目录到全路径的文件
+2、$_SERVER['DOCUMENT_ROOT'];   从服务器根目录开始到网站根目录 
+这两种写法等效。
+另外，使用超全局变量定义网站根目录，特别实用
+如：$GLOBALS['root'] = "/home/web/"; 
+定义一次，就可以在任何地方使用了!
+
+
+
+
+构造方法 __construct();
+是对象创建完成以后，第一个自动调用的方法（特殊）
+给对象中的成员赋初值使用的
+
+
+析构方法 __destruct();
+在对象被销毁之前自动调用，不能带有任参数
+主要用于释放资源（如关闭文件，释放结果集等）
+
+
+ final关键字
+ 1、final可以修饰类 -- 这个类不能去扩展，不能有子类（不让别人去扩展，这个类是最终的类时）
+ 2、final可以修饰方法 -- 这个方法就不能在子类中覆盖（不让子类去改这个方法，或扩展这个方法的功能时，这个方法也就是最终的方法）
+
+
+
+
+
+
+

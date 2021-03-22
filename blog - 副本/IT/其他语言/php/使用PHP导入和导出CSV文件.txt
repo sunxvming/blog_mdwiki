@@ -1,0 +1,129 @@
+
+
+项目开发中，很多时候要将外部CSV文件导入到数据库中或者将数据导出为CSV文件，那么具体该如何实现呢？本文将使用PHP并结合 mysql ，实现了CSV格式数据的导入和导出功能。
+我们先准备 mysql 数据表，假设项目中有一张记录学生信息的表student，并有id，name，sex，age分别记录学生的姓名、性别、年龄等信息。
+
+CREATE   TABLE  `student` (   
+    `id`  int (11)  NOT   NULL  auto_increment,   
+    ` name `  varchar (50)  NOT   NULL ,   
+    `sex`  varchar (10)  NOT   NULL ,   
+    `age`  smallint (3)  NOT   NULL   default  '0',   
+     PRIMARY   KEY   (`id`)   
+) ENGINE=MyISAM   DEFAULT  CHARSET=utf8;  
+
+我们还需要一个html交互页面，放置导入表单和导出按钮。
+
+< form   id = "addform"   action = "do. php ?action=import"   method = "post"   enctype = "multipart/form-data" >   
+     < p > 请选择要导入的CSV文件： < br /> < input   type = "file"   name = "file" >   < input   type = "submit"   
+     class = "btn"   value = "导入CSV" >   
+     < input   type = "button"   class = "btn"   value = "导出CSV"   onclick =" window.location.href ='do. php ?   
+     action = export '" > </ p >   
+</ form >   
+
+选择好本地 csv 文件后，点击导入，提交到do.php?action=import处理，而点击导出按钮则请求地址do.php?action=export进行数据导出处理。
+
+1.导入CSV
+do.php需要根据get过来的参数，分别处理导入和导出过程，php结构如下：
+
+include_once  ( "connect.php" );  //连接数据库   
+$action  =  $_GET ['action'];   
+if  ( $action  == 'import')  //导入CSV   
+{   
+     //导入处理   
+} elseif ( $action =='export')  //导出CSV   
+{   
+     //导出处理    
+}  
+
+导入CSV处理流程：校验 csv 文件合法性（本文忽略）->打开读入并解析 csv 文件中的字段->循环获取各字段值->批量添加到数据表中->完成。
+
+if  ( $action  == 'import') {  //导入CSV   
+     $filename  =  $_FILES ['file']['tmp_name'];   
+     if ( empty empty  ( $filename ))   
+    {   
+         echo  '请选择要导入的CSV文件！';   
+         exit ;   
+    }   
+     $handle  =  fopen ( $filename , 'r');   
+     $result  = input_csv( $handle );  //解析csv   
+     $len_result  =  count ( $result );   
+     if ( $len_result ==0)   
+    {   
+         echo  '没有任何数据！';   
+         exit ;   
+    }   
+     for ( $i  = 1;  $i  <  $len_result ;  $i ++)  //循环获取各字段值   
+    {   
+         $name  =  iconv ('gb2312', 'utf-8',  $result [ $i ][0]);  //中文转码   
+         $sex  =  iconv ('gb2312', 'utf-8',  $result [ $i ][1]);   
+         $age  =  $result [ $i ][2];   
+         $data_values  .=  "('$name','$sex','$age')," ;   
+    }   
+     $data_values  =  substr ( $data_values ,0,-1);  //去掉最后一个逗号   
+    fclose( $handle );  //关闭指针   
+     $query  = mysql_query( "insert into student (name,sex,age) values $data_values" );  //批量插入数据表中   
+     if ( $query )   
+    {   
+         echo  '导入成功！';   
+    } else {   
+         echo  '导入失败！';   
+    }   
+}  
+
+注意php自带的fgetcsv函数可以轻松处理csv，使用该函数可以从文件指针中读入一行并解析CSV字段。下面的函数将csv文件字段解析并以数组的形式返回。
+
+function  input_csv( $handle )   
+{   
+     $out  =  array  ();   
+     $n  = 0;   
+     while  ( $data  =  fgetcsv ( $handle , 10000))   
+    {   
+         $num  =  count ( $data );   
+         for  ( $i  = 0;  $i  <  $num ;  $i ++)   
+        {   
+             $out [ $n ][ $i ] =  $data [ $i ];   
+        }   
+         $n ++;   
+    }   
+     return   $out ;   
+}  
+
+此外在导入到数据库中时，我们采用的是批量插入而不是一条条插入的，因此在构建SQL语句时，要稍作处理，见代码。
+
+2.导出CSV
+我们知道csv文件是由逗号分割符组成的纯文本文件，你可以用 excel 打开，效果跟xls表个一样。
+导出CSV处理流程：读取学生信息表->循环记录构建逗号分隔的字段信息->设置header信息->导出文件（下载）到本地
+
+...   
+} elseif  ( $action =='export')  //导出CSV   
+{   
+     $result  = mysql_query( "select * from student order by id asc" );   
+     $str  =  "姓名,性别,年龄\n" ;   
+     $str  = iconv('utf-8','gb2312', $str );   
+     while ( $row =mysql_fetch_array( $result ))   
+    {   
+         $name  = iconv('utf-8','gb2312', $row ['name']);  //中文转码   
+         $sex  = iconv('utf-8','gb2312', $row ['sex']);   
+         $str  .=  $name . "," . $sex . "," . $row ['age']. "\n" ;  //用引文逗号分开   
+    }   
+     $filename  =  date ('Ymd').'.csv';  //设置文件名   
+    export_csv( $filename , $str );  //导出   
+}  
+
+要将数据导出到本地即下在，需要修改header信息，代码如下：
+
+function  export_csv( $filename , $data )   
+{   
+    header( "Content-type:text/csv" );   
+    header( "Content-Disposition:attachment;filename=" . $filename );   
+    header('Cache-Control:must-revalidate,post-check=0,pre-check=0');   
+    header('Expires:0');   
+    header('Pragma: public ');   
+     echo   $data ;   
+}  
+
+注意导入和导出的过程中，因为我们使用的是统一UTF-8编码，遇到中文字符一定要记得转码，否则可能会出现中文乱码的情况。
+好了，本文讲解到此，后面我还会有文章介绍PHP结合mysql导入导出 excel ，以及xml的导入导出，敬请关注。
+转自：http://www.helloweba.com/view-blog-171.html 本文地址： http://www.92csz.com/47/1238.html
+如非注明则为本站原创文章，欢迎转载。转载请注明转载自： moon's blog
+ 

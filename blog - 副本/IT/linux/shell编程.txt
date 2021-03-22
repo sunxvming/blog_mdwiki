@@ -1,0 +1,421 @@
+第 九 篇 shell 编 程 (选 学 内容 )
+入门
+什么是 shell?
+#!/bin/bash
+cd /var/tmp/
+pwd
+第 2 步,加上执行权限, chmod u+x simple.sh
+第 3 步 执行, ./simple.sh
+二: 进阶
+
+既然是 shell 编程,那么必然少不了变量,表达式,及控制结构这些.
+变量有三种:
+1.自定义变量
+var1=hello
+var2=bash
+#注意,=号两边都不要有空格
+echo $var1 $var2
+
+
+2.系统变量
+echo $HOME
+echo $USER
+
+
+3.命令返回值变量
+var1=`date +%y%m%d`
+echo $var1
+
+三:提高
+
+会定义变量,会使用系统变量,会捕捉命令的返回值,还不够,
+有了变量,还要有 表达式 和 控制结构 ,才能叫”程序”
+表达式有”命令表达式”,”数学表达式”,”字符串表达式”,”文件判断表 达式”
+控制结构有 if/ case/for/while
+先来看一下命令表达式和 if/else 控制结构
+1.命令表达式 是指如果一个命令执行成功,则返回 true,如果执行失败,则执行 false
+if/else 的语法格式如下:
+if 表达式
+then
+语句 1
+语句 2
+....
+else
+语句 one
+语句 two
+.....
+fi
+结合 命令表达式 ,和 if 控制结构,我们创建一个脚本:com_exp.sh
+作用:帮我们创建一个目录 dir1, 如果创建成功,则显示 ok;如果失败,则显示 fail.
+代码示例:
+if mkdir dir1
+then
+echo ok
+else
+echo fail
+fi
+2.数学比较表达式
+数学比较表达式的作用: 比较两数的大小关系
+数学表达式是这样的结构[ $var1 -gt/-lt/-eq/-ge/-le/-ne $var2 ]
+注意:中括号两端各有 1 空格
+比较运算符的含义见下:
+-gt >
+-lt <
+-ge >=
+-le <=
+-eq =
+-ne !=
+
+
+作用:判断两个变量的大小,并打印结果.
+#!/bin/bash
+var1=8
+var2=12
+if [ $var1 -gt $var2 ]
+then
+echo $var1 more than $var2
+elif   [ $var1 -eq $var2 ]
+then
+echo $var1 equal $var2
+else
+echo $var1 less than $var2
+fi
+3.字符串表达式
+字符串表达式的作用: 用于判断两字符串是否相同
+格式:[ $str1 =/!= str2 ] 
+代码示例
+#!/bin/bash
+var1=hello
+var2=world
+if [ $var1 = $var2 ]
+then
+echo $var1 is $var2
+else
+echo $var1 is not $var2
+4.文件判断表达式
+文件表达式作用:判断文件是否存在,是否可读/可写/可执行,是否是目录或普通文件等,
+以及用来比较两个文件的新旧顺序.
+格式 1: [ -d/-f/-e/-r/-w/-x filename ]
+分别判断
+-d 文件是否存在且是目录 
+-f 文件是否存在且是文件
+-e 是否存在
+-r 是否可读
+-w 是否可写
+-x 是否可执行
+格式 2: [ file1   -nt/-ot   file2 ]
+分别判断
+-nt   检查 file1 是否为 file2 新   new then
+-ot   检查 file1 是否为 file2 旧   old then
+
+
+作用:判断当前目录下有没有 dir2 目录
+代码示例:
+if [ -d ./dir2 ]
+then
+ls dir2
+else
+echo dir2 is not exists
+fi
+---------------------------
+for 结构 (for 循环有两种)
+1: bash 风格的 for 循环
+格式如下:
+for 变量名 in 值 1 值 2 值 3 .... 值 n
+do
+语句 1
+语句 2
+....
+done
+创建脚本 bash_for.sh
+作用: 打印 A B C D E
+代码示例:
+#!/bin/bash
+for i in A B C D E
+do
+echo $i
+done
+
+
+2:C 风格的 for 循环
+格式如下:
+for((变量=初始值;变量<=n;变量++))
+do
+语句 1
+语句 2
+...
+done
+创建脚本:c_bash.sh
+作用:计算 1-100 的和
+代码示例:
+#!/bin/bash
+sum=0 
+
+for((i=1;i<=100;i++))  ; do
+sum=$[ $sum + $i ] 
+done
+echo $sum
+
+
+case 结构介绍
+格式如下:
+case 变量 in
+可能性 1)
+语句 1
+语句 2
+;;
+可能性 2)
+语句 1
+语句 2
+;;
+*)
+语句 1
+语句 2
+;;
+创建脚本: case.sh
+作用:判断当前登陆者是谁,并根据情况打印不同内容
+代码示例
+#!/bin/bash
+case    $USER    in
+shiba)
+echo -n “you “
+echo -n “are “
+echo “shiba” ;;
+shijiu)
+echo you are shijiu
+*)
+echo sorry!
+esac
+几行语句后面,放两个;;就可以了, 而不是每行后面都放两个;;
+*代表以上情况都不是时,类似于 java 中的 default
+=====================
+#! /bin/sh
+a=5
+b=5
+echo a=$a
+echo b=$b
+if (test "$a" = "$b") then
+        echo a=b
+else
+        echo a!=b
+fi
+--------------------
+#! /bin/sh
+DATE=`date`
+echo "today is" $DATE
+
+
+//用户输入两个数字，计算两个数字的和
+#! /bin/sh
+read a
+echo 'a=' $a
+read b
+echo 'b=' $b
+c= `expr $a + $b`
+echo $c
+
+
+一个循环5次的例子
+#! /bin/sh
+times=0
+while [ "$times" != "5" ];
+do
+        echo $times
+        times= $[$times + 1]
+done
+
+
+
+
+//多重分支的例子
+#! /bin/sh
+case "$1" in
+start)
+        echo "is start"
+        ;;
+stop)
+        echo "is stop"
+        ;;
+*)
+        echo "is nothing"
+esac
+
+
+
+
+
+find /data/gamecode/logfancy -mtime +10 -exec rm -rf {} \;      -exec是find的一个参数 
+
+find ... | xargs rm -rf 
+
+其区别简单的说是前者是把find发现的结果一次性传给exec选项，这样当文件数量较多的时候，就可能会出现“参数太多”之类的错误，相比较而言，后者就可以避免这个错误，因为xargs命令会分批次的处理结果。
+
+
+
+
+
+像部署服务器的工作可能会要用到些公共的文件啥的，可以放到一个cdn上，shell脚本中用wget去获取脚本
+
+
+
+
+用crontab执行shell脚本的时候要注意给脚本 可执行的权限 ，要不会报permision deny的错误
+shell脚本要实时的打印脚本的 执行情况 ，以方便调用人员知道执行情况，而不会产生焦虑
+
+------------------
+向文件追加内容
+cat >>/root/.pgpass<<EOF
+*:5432:*:postgres:4ouu8qpr
+EOF
+
+
+打开命令再输入内容
+/usr/local/pgsql/bin/psql -U postgres -X<<E2
+CREATE USER gameop_admin with NOCREATEDB NOCREATEROLE  NOCREATEUSER;
+CREATE USER gameop_gs with CREATEDB;
+ALTER USER gameop_admin PASSWORD 'md5bc7e378b2e82592800c047eea1758566';
+ALTER USER gameop_gs PASSWORD 'md57f4b1021cc26755556e314c950c0500a';
+E2
+
+
+----------------------------
+分号是多个语句之间的分隔符
+if [ XXXXXXXXXXXXX]; then
+它完全等效于下面的两句：
+if [ XXXXXXXXXXXXX]
+then
+--------------------------------------------------
+${var}基本上等价于$var
+第一个严谨一些，第二个：
+比如$1...$9这个没区别，但是$10呢，${var}的这种就是${10}
+而$var却是$10是$1后边带个0。
+
+
+------得到了脚本所在目录的绝对路径--------
+#DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+S0="${BASH_SOURCE[0]}"
+DIRNAME="$( dirname "$S0")"  
+DIR="$( cd "$DIRNAME" && pwd)"
+echo "$S0"
+echo "$DIRNAME"
+echo "$DIR"  
+运行脚本，输出：
+./build/jenkins/tesh.sh
+./build/jenkins
+/Users/heliclei/.jenkins/jobs/dailybuild-develop-ios/workspace/build/jenkins
+ 
+S0是脚本相对于当前目录的路径，是相对路径
+再用dirname命令得到脚本的目录名，也是相对路径  
+用cd命令切换到脚本所在目录，再执行pwd命令，
+就得到了脚本所在目录的绝对路径
+
+
+================================================
+s=''
+space=' '
+for((date=20160607;date<=20160630;date++))
+do 
+s=${s}${space}${date}
+done
+echo $s
+----------------------
+for i in `ls *.tar.gz`
+do 
+tar zxvf $i
+done
+---------------注：解压到的是当前文件夹下--------------
+for tar in `find /data/kbzy-bak   -name *.gz`
+do
+tar zxvf $tar    # 犯了个错误，都解压在当前文件夹下来，相同的文件被覆盖掉了
+done
+-------------------------------------
+for tar in `find /data/kbzy-bak   -name *.gz`
+do
+echo "processing--->"${tar}
+
+tar zxvf $tar  -C   `dirname $tar `         //解压到它所在的目录
+done
+===============================
+s=''
+space=' '
+for((date=20160615;date<=20160630;date++))
+do 
+s=${s}' "'${date}'"'
+done
+echo $s
+"20160615" "20160616" "20160617" "20160618" 
+
+----------------------------
+files=("06" "07" "08" "09" "10" "11" "12" "13" "14")
+for var in ${files[*]}      #[*]代表输出所有的值  ${files[1]} 代表读取第一个
+do
+    cat /data/gamecode/logfancy/hue.2016-07- $var .yb_expend | grep "buyshizhuang" | awk -F ',' '{print $7"\t"$11"\t"$5"\t"$8"\t"$9}' >> /tmp/shiz.xls
+done
+
+
+================================================
+指定分割符，并过滤，要注意的是 & 等特殊符号得 转义   []里面可以多个的
+awk -F[=\&] '$2=="roleinfo"  {print $1,$2,$3,$4}' OFS=","  kbzy.log  > a.log
+
+
+
+
+用管道过滤一下   -F 里面的三个符号算一个分隔符  *感觉效率稍低便不采用，因为用了管道
+awk -F '":"' '/roleinfo/  {print $2}' OFS=","  yuanshi.log | awk -F[=\&] '{print $6,$8,$10,$12,$80,$82}'   OFS=","  > b.log
+
+
+
+
+============= 生成csv格式文件 ========================
+#3号到15号的日志处理,生成csv格式文件
+#interface=item_log&gid=10&dept=android&sid=1308310142&user=0060015_adytya944%40gmail.com&oldsid=1308310142&roleid=65880147&time=1479225566&vip=4&level=69&itemid=405204&op=1&reason=zydh&amount=1&channel=gtarcade&isgm=0&power=1094656&regtime=1478404150&line=4
+
+
+for file in `find /data/kbzy-bak   -name *.log`
+do
+echo $file" processing..." 
+#awk -F[:=\&] '/roleinfo/  {print $7,$9,$11,$13,$15,$17,$19,$21,$23,$25,$27,$29,$31,$33,$35,$37,$39,$41,$43,$45,$47,$49,$51,$53,$55,$57,$59,$61,$63,$65,$67,$69,$71,$73,$75,$77,$79,$81,$83}' OFS=","  $file   >> `dirname $file`"/roleinfo.log"
+done
+
+
+-----------------------批量解压---------------------
+#!/bin/bash
+day="20160919"
+folder="/data/td-agent/gamelog/"$day
+
+
+for bg in `ls $folder`; do
+        cd $folder"/"$bg
+        echo "unpack game-kbzy-all-act.log."$day".log.tar.gz..."
+        tar zxvf "game-kbzy-all-act.log."$day".log.tar.gz"     
+echo "write game-kbzy-all-act.log."$day".log.tar.gz..."
+        cat "game-kbzy-all-act.log."$day".log"  >> /data/td-agent/gamelog/log.log       
+
+        rm -rf "game-kbzy-all-add.log."$day".log"
+        rm -rf "game-kbzy-all-act.log."$day".log"
+done
+------------------------------------
+day="20160919"
+interface=item_log
+roleid=25020431
+folder="/data/bak/kbzy/"$day
+ 
+for bg in `ls $folder`; do
+        cd $folder"/"$bg
+        echo "unpack game-kbzy-all-act.log."$day".log.tar.gz..."
+        tar zxvf "game-kbzy-all-act.log."$day".log.tar.gz"
+        echo "start search game-kbzy-all-act.log."$day".log..."
+        cat "game-kbzy-all-act.log."$day".log" | grep interface=$interface | grep dept=217 | grep roleid=$roleid >> /data/bak/kbzy/search_result_$roleid
+        #echo "remove file game-sm-act.log."$day".log..."
+        #rm -rf "game-sm-act.log."$day".log"
+done
+-----------------------------------------------
+for log in `find /data/kbzy-bak -name *log`
+do 
+cat $log >>/data/kbzy/roleinfoall.log
+done
+
+
+
+
+

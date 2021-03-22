@@ -1,0 +1,39 @@
+```
+#include <stdio.h>
+#include <stdlib.h>
+#include <execinfo.h>
+#include <signal.h>
+
+
+void dump(int signo)
+{
+        fprintf(stderr,"catch Segmentation fault!!!\n");
+#define SIZE 100
+        FILE *fh;
+        if(!(fh = fopen("./dbg_msg.log", "w+")))
+                exit(0);
+        void *buffer[100];
+        int nptrs;
+        nptrs = backtrace(buffer,SIZE);
+        backtrace_symbols_fd(buffer, nptrs, fileno(fh));
+        fflush(fh);
+        exit(-1);
+}
+
+
+int main(){
+   signal(SIGSEGV, &dump); 
+   char *p;  
+   p = NULL;  
+   *p = 'x';  
+   printf("%c", *p);  
+   return 0;
+}
+```
+查看地址对应的行号
+```
+addr2line -a 0x400819 0x400877 0x400709 -f -e a.out
+```
+
+
+

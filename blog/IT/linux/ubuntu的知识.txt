@@ -1,0 +1,51 @@
+
+Alt+Tab切换到打开多个同类型程序时，停顿一下，可以显示出对应多个程序
+Ctrl+Alt+T  
+
+1、先解除root锁定，为root用户设置密码
+打开终端输入：sudo passwd
+Password: <--- 输入你当前用户的密码  
+Enter new UNIX password: <--- 新的Root用户密码  
+Retype new UNIX password: <--- 重复新的Root用户密码
+passwd：已成功更新密码
+
+
+cowsay命令：打印一个小牛（或者其他动物，-f cowfile，cowfile可以使用-l查看），说话或想象，内容可以自定，可以利用管道配合
+
+
+
+
+---------------------------------------
+在我们继续了解如何安装Java之前，让我们快速地了解JRE、OpenJDK和Oracle JDK之间的不同之处。
+ 
+JRE（Java Runtime Environment），它是你运行一个基于Java语言应用程序的所正常需要的环境。如果你不是一个程序员的话，这些足够你的需要。
+JDK代表Java开发工具包，如果你想做一些有关Java的开发（阅读程序），这正是你所需要的。
+OpenJDK是Java开发工具包的开源实现，Oracle JDK是Java开发工具包的官方Oracle版本。尽管OpenJDK已经足够满足大多数的案例，但是许多程序比如Android Studio建议使用Oracle JDK，以避免UI/性能问题。
+java -version
+
+sudo apt-get install default-jre
+
+sudo apt-get install default-jdk
+javac 会提示让你安装什么
+yum install java-1.7.0-openjdk  java-1.7.0-openjdk-devel  #安装openjdk
+
+
+
+tar  zxvf   PhpStorm-*.tar.gz       解压的目录就是安装的目录
+进入phpstorm的bin目录执行安装脚本
+cd PhpStorm-* ./PhpStorm.sh
+然后搜索个注册码就行
+
+
+/etc/profile中修改环境变量
+export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+export JRE_HOME=$JAVA_HOME/jre
+export CLASSPATH=$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH
+export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
+
+
+【终端的加强版】
+GuakeTerminal──linux下完美帅气的终端 
+
+
+

@@ -1,0 +1,19 @@
+cat -v xx  可以显示可不见字符
+
+
+【vim替换】
+在 Vim 的命令模式中输入 :%s/^M$//g 
+
+% 指匹配整个文件，s 是置换的意思，^M 注意要用 Ctrl + V Ctrl + M 来输入，M 后面的 $ 代表匹配行尾的内容，最后的 g 则表示每行中匹配到的内容都要置换。
+
+要将某个文件中的 Vim 全部替换成 VIM，则可以使用这样的命令：:%s/Vim/VIM/g。
+
+
+
+【vim设置文件格式】
+:set fileformat=unix
+
+
+
+【转换工具】
+dos2unix Filename
