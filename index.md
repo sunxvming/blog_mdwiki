@@ -3,6 +3,9 @@
  - [README.md](./README.md)
  - [index.md](./index.md)
  - [navigation.md](./navigation.md)
+ - [文件说明.md](./文件说明.md)
+ - **blog/**
+   - **IT/**
      - **c.c++/**
        - [Linux文件概念.md](./blog/IT/c.c++/Linux文件概念.md)
        - [c语言backtrace.md](./blog/IT/c.c++/c语言backtrace.md)
@@ -75,18 +78,23 @@
          - [gcov.md](./blog/IT/c.c++/性能分析/gcov.md)
          - [perf.md](./blog/IT/c.c++/性能分析/perf.md)
          - [valgrind.md](./blog/IT/c.c++/性能分析/valgrind.md)
+       - **汇编/**
        - **现代C++实战30讲/**
          - [自己动手，实现C++的智能指针.md](./blog/IT/c.c++/现代C++实战30讲/自己动手，实现C++的智能指针.md)
        - **罗剑锋的C++实战笔记/**
          - [罗剑锋的C++实战笔记.md](./blog/IT/c.c++/罗剑锋的C++实战笔记/罗剑锋的C++实战笔记.md)
        - **面试/**
          - [面试题.md](./blog/IT/c.c++/面试/面试题.md)
+     - **database/**
        - **mencache/**
          - [memcache.md](./blog/IT/database/mencache/memcache.md)
+       - **mongodb/**
        - **mysql/**
          - [mysql笔记.md](./blog/IT/database/mysql/mysql笔记.md)
          - [mysql调优.md](./blog/IT/database/mysql/mysql调优.md)
          - [数据库“长连接”与“短连接” .md](./blog/IT/database/mysql/数据库“长连接”与“短连接” .md)
+       - **postgresql/**
+       - **redis/**
      - **linux/**
        - [LINUX服务器的性能能分析.md](./blog/IT/linux/LINUX服务器的性能能分析.md)
        - [VMware设置centos7共享文件夹.md](./blog/IT/linux/VMware设置centos7共享文件夹.md)
@@ -109,6 +117,7 @@
        - [win10下安装PyQt4.md](./blog/IT/python/win10下安装PyQt4.md)
        - **Python核心技术与实战/**
          - [Python核心技术与实战.md](./blog/IT/python/Python核心技术与实战/Python核心技术与实战.md)
+     - **其他主题/**
        - **windows&mac/**
          - [windows使用技巧.md](./blog/IT/其他主题/windows&mac/windows使用技巧.md)
        - **其他/**
@@ -123,6 +132,10 @@
          - [常见缩写.md](./blog/IT/其他主题/软件工程/常见缩写.md)
        - **面试题/**
          - [自我介绍.md](./blog/IT/其他主题/面试题/自我介绍.md)
+     - **其他语言/**
+       - **java/**
+         - **android/**
+         - **hadoop/**
        - **lua/**
          - [lua和c交互.md](./blog/IT/其他语言/lua/lua和c交互.md)
          - [lua闭包.md](./blog/IT/其他语言/lua/lua闭包.md)
@@ -132,8 +145,15 @@
          - [php常见错误.md](./blog/IT/其他语言/php/php常见错误.md)
          - [代码片段.md](./blog/IT/其他语言/php/代码片段.md)
          - [面向对象的代码.md](./blog/IT/其他语言/php/面向对象的代码.md)
+         - **book/**
+         - **laravel/**
+         - **php高性能/**
          - **wordpress/**
            - [wordpress插件.md](./blog/IT/其他语言/php/wordpress/wordpress插件.md)
+         - **代码/**
+         - **功能扩展/**
+         - **微信/**
+       - **ruby/**
      - **基础/**
        - [llvm.md](./blog/IT/基础/llvm.md)
        - [webassembly.md](./blog/IT/基础/webassembly.md)
@@ -152,14 +172,19 @@
        - [xshell.md](./blog/IT/工具/xshell.md)
        - [常用软件和工具.md](./blog/IT/工具/常用软件和工具.md)
        - [文档发布工具.md](./blog/IT/工具/文档发布工具.md)
+       - **版本管理/**
+     - **应用方向/**
        - **game/**
          - [极客时间-从0开始学游戏开发.md](./blog/IT/应用方向/game/极客时间-从0开始学游戏开发.md)
          - **图形/**
            - [glut 消息事件处理函数 glutMainLoop().md](./blog/IT/应用方向/game/图形/glut 消息事件处理函数 glutMainLoop().md)
+         - **引擎/**
          - **游戏/**
            - [unity面试题.md](./blog/IT/应用方向/game/游戏/unity面试题.md)
            - [导航网格寻路C++实现版(入门级).md](./blog/IT/应用方向/game/游戏/导航网格寻路C++实现版(入门级).md)
            - [游戏服务器.md](./blog/IT/应用方向/game/游戏/游戏服务器.md)
+       - **web/**
+         - **HTML/**
          - **javascript/**
            - [Ajax和XMLHttpRequest.md](./blog/IT/应用方向/web/javascript/Ajax和XMLHttpRequest.md)
        - **区块链/**
