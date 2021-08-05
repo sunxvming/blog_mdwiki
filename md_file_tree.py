@@ -129,13 +129,13 @@ def create_index(cwd, headings=False, wikilinks=False):
                                                                   md_filename_without_ext,
                                                                   rel_dir,
                                                                   TOC_LIST_PREFIX,
-                                                                  md_filename_without_ext + ".html"))
+                                                                  md_filename_without_ext + ".md"))
                 else:
                     md_lines.append('{0} {3} [{1}]({2}{4})\n'.format(indent,
                                                                      md_filename_without_ext,
                                                                      rel_dir,
                                                                      TOC_LIST_PREFIX,
-                                                                     md_filename_without_ext + ".html"))
+                                                                     md_filename_without_ext + ".md"))
                 if headings:
                     results = get_headers(os.path.join(root, md_filename))
                     if len(results) > 0:
