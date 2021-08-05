@@ -33,13 +33,13 @@ blog_mdwiki
 ├── batch_mod_file_suffix.sh    # 批量修改指定目录下的文件名,可以递归的修改
 ├── blog                        # 所有博客都在此目录下
 ├── change_img_url.sh           # 批量修改博客中的图片链接的shell脚本
-├── config.json
+├── config.json                 # mdwiki的配置文件
 ├── index.html                  # mdwiki源码
 ├── index.md                    # 博客首页
 ├── md_file_tree.py             # 生成当前文件中的所有markdown文件列表的工具
 ├── md-to-toc.py                # 生成markdown的toc的工具
 ├── navigation.md               # blog中的导航栏
-├── web.config
+
 
 ```
 
