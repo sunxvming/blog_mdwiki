@@ -1,4 +1,5 @@
 protobuf 是一个开源项目，而且是后台很硬的开源项目。
+
 它是一种轻便高效的结构化数据存储格式，适合做数据存储或传输协议格式
 
 
@@ -49,6 +50,7 @@ Google自然无法容忍XML在性能上的明显缺点。再加上 Google 从来
 
 
 bat生成脚本
+示例1：
 ```
 @echo off
 
@@ -64,6 +66,28 @@ for %%i in (.\proto\*.proto) do (
 echo end...  
 pause 
 ```
+示例2：
+```
+ @echo off
+ 
+ set SOURCE_FOLDER=.
+ set CPP_COMPILER_PATH=protoc.exe
+ set CPP_TARGET_PATH=./client/
+ 
+
+ for /f "delims=" %%i in ('dir /b "%SOURCE_FOLDER%\*.proto"') do (
+
+     echo %CPP_COMPILER_PATH% --cpp_out=%CPP_TARGET_PATH% %%i
+     %CPP_COMPILER_PATH% --cpp_out=%CPP_TARGET_PATH% %%i
+ 
+ )
+
+pause
+```
 ### 数字编号 
 在消息定义中，每个字段都有唯一的一个数字标识符。这些标识符是用来在消息的二进制格式中识别各个字段的，一旦开始使用就不能够再改变。注：[1,15]之内的标识号在编码的时候会占用一个字节。[16,2047]之内的标识号则占用2个字节。所以应该为那些频繁出现的消息元素保留 [1,15]之内的标识号。切记：要为将来有可能添加的、频繁出现的标识号预留一些标识号。
 
+
+## 其他资源
+
+- [一种自动反射消息类型的 Google Protobuf 网络传输方案](https://blog.csdn.net/solstice/article/details/6300108) by,陈硕

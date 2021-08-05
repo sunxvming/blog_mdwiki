@@ -1,4 +1,3 @@
-附件是青果游戏按天读log文件然后进数据库的脚本
 
 
 mysql的python客户端目前市场主流有三个，分别是 mysqldb (mysqlclient), mysql connector python 和 pymysql。
